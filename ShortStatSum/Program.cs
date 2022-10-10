@@ -47,7 +47,7 @@ namespace ShortStatSum
             }
 
             Console.WriteLine();
-            Write($" ({numChangedRepos} repos changed, {totalNumFilesChanged} files changed,{totalNumInsertions} insertions?(+), {totalNumDeletions} deletions?(-)");
+            Write($" {numChangedRepos} repos changed, {totalNumFilesChanged} files changed, {totalNumInsertions} insertions(+), {totalNumDeletions} deletions(-)");
         }
 
         private static void Write(string line) => Console.WriteLine(line);
