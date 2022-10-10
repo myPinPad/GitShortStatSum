@@ -7,30 +7,12 @@ namespace ShortStatSum
         public static void Main(string[] args)
         {
             string? line;
-            int linesRead = 0;
             int numChangedRepos = 0;
             int totalNumFilesChanged = 0;
             int totalNumInsertions = 0;
             int totalNumDeletions = 0;
 
-            while (Console.KeyAvailable)
-            {
-                line = Console.ReadLine();
-                if (line == null)
-                    break;
-
-                if (ShortStatLine.TryParse(line, out ShortStatLine? shortStatLine))
-                {
-                    numChangedRepos++;
-                    totalNumFilesChanged += shortStatLine!.NumFilesChanged;
-                    totalNumInsertions += shortStatLine!.NumInsertions;
-                    totalNumDeletions += shortStatLine!.NumDeletions;
-                }
-            }
-
-            Console.WriteLine();
-
-            if (linesRead == 0)
+            if (!Console.IsInputRedirected)
             {
                 Write("This tool calculates the total number of changes in the output of multiple");
                 Write("    git diff --shortstat");
@@ -46,11 +28,26 @@ namespace ShortStatSum
                 Write("");
                 Write("For details on git diff syntax, see ");
                 Write("    git help diff");
+                Environment.Exit(0);
             }
-            else
+
+            while (true)
             {
-                Write($" ({numChangedRepos} repos changed, {totalNumFilesChanged} files changed,{totalNumInsertions} insertions?(+), {totalNumDeletions} deletions?(-)");
+                line = Console.ReadLine();
+                if (line == null)
+                    break;
+
+                if (ShortStatLine.TryParse(line, out ShortStatLine? shortStatLine))
+                {
+                    numChangedRepos++;
+                    totalNumFilesChanged += shortStatLine!.NumFilesChanged;
+                    totalNumInsertions += shortStatLine!.NumInsertions;
+                    totalNumDeletions += shortStatLine!.NumDeletions;
+                }
             }
+
+            Console.WriteLine();
+            Write($" ({numChangedRepos} repos changed, {totalNumFilesChanged} files changed,{totalNumInsertions} insertions?(+), {totalNumDeletions} deletions?(-)");
         }
 
         private static void Write(string line) => Console.WriteLine(line);
